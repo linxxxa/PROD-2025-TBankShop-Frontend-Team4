@@ -1,0 +1,350 @@
+/* src/components/home/HomePage.css */
+
+.home-page {
+  display: flex;
+  min-height: 100vh;
+  margin-top: 90px;
+  background: rgba(246, 247, 248, 1);
+  padding: 0;
+  position: relative;
+}
+
+/* Боковые панели - закрепленные */
+.home-page__sidebar {
+  width: 300px;
+  min-width: 300px;
+  padding: 20px;
+  background: transparent;
+  position: fixed;
+  top: 90px;
+  bottom: 0;
+  overflow: hidden;
+}
+
+.home-page__sidebar--left {
+  left: 0;
+}
+
+.home-page__sidebar--right {
+  right: 0;
+}
+
+.sidebar-placeholder {
+  height: 100%;
+  background: transparent;
+}
+
+/* Основной контент - прокручиваемый */
+.home-page__main {
+  flex: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  margin-left: 300px;
+  margin-right: 300px;
+  min-height: calc(100vh - 90px);
+  overflow-y: auto;
+}
+
+.home-page__main::-webkit-scrollbar {
+  width: 6px;
+}
+
+.home-page__main::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.home-page__main::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.home-page__main::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+.main-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Увеличенный заголовок с оранжевым фоном */
+.main-title {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 700;
+  font-size: 42px; /* Увеличили размер */
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+  line-height: 1.2;
+}
+
+.supermarket-text {
+  background: #FFA726; /* Светло-оранжевый фон */
+  padding: 4px 12px;
+  border-radius: 8px;
+  color: #333;
+}
+
+/* Новая надпись */
+.subtitle {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 400;
+  font-size: 20px;
+  color: #666;
+  text-align: center;
+  margin-bottom: 30px;
+  line-height: 1.4;
+}
+
+.stores-title {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 700;
+  font-size: 32px;
+  color: #333;
+  text-align: center;
+  margin: 40px 0 30px 0;
+  line-height: 1.2;
+}
+
+/* Увеличенная основная картинка */
+.main-image {
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 30px;
+}
+
+.main-image img {
+  width: 100%;
+  height: 350px; /* Увеличили высоту картинки */
+  object-fit: cover;
+  display: block;
+  border-radius: 16px;
+}
+
+/* Сетка магазинов - более узкие карточки */
+.stores-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+  align-items: stretch;
+}
+
+/* Карточка магазина - более узкая */
+.store-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+.store-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+/* Контейнер для изображения */
+.store-card__image-container {
+  width: 100%;
+  height: 160px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 16px 16px 0 0;
+  flex-shrink: 0;
+}
+
+.store-card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Контент карточки - более компактный */
+.store-card__content {
+  padding: 16px 20px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.store-card__name {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  color: #333;
+  margin: 0 0 8px 0;
+  line-height: 1.3;
+  min-height: 24px;
+}
+
+.store-card__description {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  font-size: 13px;
+  color: #666;
+  margin: 0 0 12px 0;
+  line-height: 1.4;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Кнопка "Подробнее" - более компактная */
+.store-card__button {
+  background: #f5f5f5;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  font-size: 13px;
+  color: rgb(18, 109, 247);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  min-height: 36px;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+
+.store-card__button:hover {
+  background: #e8e9ea;
+}
+
+/* Адаптивность */
+@media (max-width: 1200px) {
+  .home-page__sidebar {
+    width: 250px;
+    min-width: 250px;
+  }
+  
+  .home-page__main {
+    margin-left: 250px;
+    margin-right: 250px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .home-page__sidebar {
+    width: 200px;
+    min-width: 200px;
+  }
+  
+  .home-page__main {
+    margin-left: 200px;
+    margin-right: 200px;
+  }
+  
+  .main-content {
+    max-width: 600px;
+  }
+}
+
+@media (max-width: 768px) {
+  .home-page {
+    flex-direction: column;
+    margin-top: 80px;
+  }
+  
+  .home-page__sidebar {
+    position: static;
+    width: 100%;
+    min-width: auto;
+    padding: 0;
+    display: none;
+  }
+  
+  .home-page__main {
+    margin-left: 0;
+    margin-right: 0;
+    padding: 20px 16px;
+    min-height: auto;
+    overflow-y: visible;
+  }
+  
+  .main-content {
+    max-width: 100%;
+  }
+  
+  .main-title {
+    font-size: 32px;
+  }
+  
+  .subtitle {
+    font-size: 18px;
+  }
+  
+  .stores-title {
+    font-size: 28px;
+  }
+  
+  .stores-grid {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+  }
+  
+  .main-image img {
+    height: 250px;
+  }
+  
+  .store-card__image-container {
+    height: 140px;
+  }
+  
+  .store-card {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .stores-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .store-card__content {
+    padding: 14px 16px 16px 16px;
+  }
+  
+  .main-title {
+    font-size: 28px;
+  }
+  
+  .subtitle {
+    font-size: 16px;
+  }
+  
+  .stores-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .store-card__name {
+    font-size: 16px;
+  }
+  
+  .store-card__description {
+    font-size: 12px;
+  }
+  
+  .store-card__button {
+    padding: 6px 12px;
+    font-size: 12px;
+    min-height: 32px;
+  }
+}
+
+/* Подключение шрифтов */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');

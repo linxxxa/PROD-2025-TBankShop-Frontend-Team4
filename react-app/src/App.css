@@ -1,0 +1,11 @@
+/* src/App.css */
+.App {
+  min-height: 100vh;
+  background: rgba(246, 247, 248, 1);
+  margin: 0;
+  padding: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
