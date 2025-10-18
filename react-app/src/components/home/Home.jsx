@@ -2,6 +2,8 @@ import lentaImage from '../../images/lenta.png';
 import perekImage from '../../images/perek.png';
 import pyaterochkaImage from '../../images/pyaterochka.png';
 import vvImage from '../../images/vv.png'; // Импорт каталога
+import Catalog from '../catalog/Catalog';
+import Cart from '../cart/Cart';
 import './Home.css'
 
 
@@ -39,18 +41,22 @@ const Home = () => {
 
   return (
     <div className="home-page">
+      {/* Каталог слева */}
       <aside className="home-page__sidebar home-page__sidebar--left">
-        <div className="sidebar-placeholder">
-        </div>
+        <Catalog/>
       </aside>
+      
+      {/* Основной контент */}
       <main className="home-page__main">
         <div className="main-content">
-          <h1 className="main-title">
-            Т-Банк Супермаркеты
-          </h1>
-          <p className="subtitle">
-            Все магазины в одном месте
-          </p>
+          <div className="main-header">
+            <h1 className="main-title">
+              Т-Банк Супермаркеты
+            </h1>
+            <p className="subtitle">
+              Все магазины в одном месте
+            </p>
+          </div>
           <div className="main-image">
             <img 
               src="https://imgproxy.cdn-tinkoff.ru/compressed95/aHR0cHM6Ly9jZG4udGJhbmsucnUvc3RhdGljL3BhZ2VzL2ZpbGVzLzNmYzFiYzAzLWM3MTQtNDY4NC05OTg0LTdiMTU3ZmI5ZDkxZC5wbmc=" 
@@ -95,9 +101,10 @@ const Home = () => {
           </div>
         </div>
       </main>
+      
+      {/* Правая боковая панель */}
       <aside className="home-page__sidebar home-page__sidebar--right">
-        <div className="sidebar-placeholder">
-        </div>
+        <Cart/>
       </aside>
     </div>
   );
