@@ -1,8 +1,19 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './Header.css';
+import Modal from '../modal/Modal';
 
-const Header = () => {
+const Header = ({ showBackButton, onBackClick }) => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [user, setUser] = useState(null);
+
+  // Проверяем, есть ли сохраненный пользователь при загрузке
+  useEffect(() => {
+    const savedUser = localStorage.getItem('user');
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
+  }, []);
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
@@ -18,12 +29,46 @@ const Header = () => {
   };
 
   const handleProfileClick = () => {
-    console.log('Profile button clicked');
+    setIsModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleLogin = (formData) => {
+    // Простая проверка - если номер телефона есть в localStorage, считаем что пользователь зарегистрирован
+    const savedUser = localStorage.getItem('user');
+    if (savedUser) {
+      const userData = JSON.parse(savedUser);
+      if (userData.phone === formData.phone) {
+        setUser(userData);
+        setIsModalOpen(false);
+        alert('Добро пожаловать!');
+      } else {
+        alert('Пользователь с таким номером не найден');
+      }
+    } else {
+      alert('Пользователь с таким номером не найден');
+    }
+  };
+
+  const handleRegister = (formData) => {
+    // Сохраняем данные пользователя в localStorage
+    localStorage.setItem('user', JSON.stringify(formData));
+    setUser(formData);
+    setIsModalOpen(false);
+    alert('Регистрация успешна!');
   };
 
   return (
     <header className='header'>
       <div className="header__container">
+        {showBackButton && (
+          <button className="header__back-button" onClick={onBackClick}>
+            ← Назад
+          </button>
+        )}
         <div className="header__brand">
           <img 
             src="https://cdn.tbank.ru/static/pfa-multimedia/images/33447f85-5b92-42f9-8d88-509bd152b47c.svg" 
@@ -41,7 +86,7 @@ const Header = () => {
                 onClick={handleSearchClick}
                 className="header__search-button"
               >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg width="32" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M21 21L16.514 16.506L21 21ZM19 10.5C19 15.194 15.194 19 10.5 19C5.806 19 2 15.194 2 10.5C2 5.806 5.806 2 10.5 2C15.194 2 19 5.806 19 10.5Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
               </button>
@@ -76,6 +121,14 @@ const Header = () => {
           </div>
         </button>
       </div>
+      
+      <Modal 
+        isOpen={isModalOpen}
+        onClose={handleModalClose}
+        user={user}
+        onLogin={handleLogin}
+        onRegister={handleRegister}
+      />
     </header>
   );
 };
