@@ -14,6 +14,12 @@ const Cart = () => {
       <div className="cart-content">
         {isCartEmpty ? (
           <div className="cart-empty">
+            <div className="cart-empty-image">
+              <img 
+                src="https://imgproxy.cdn-tinkoff.ru/compressed95/aHR0cHM6Ly9jZG4udGJhbmsucnUvc3RhdGljL3BhZ2VzL2ZpbGVzLzNmYzFiYzAzLWM3MTQtNDY4NC05OTg0LTdiMTU3ZmI5ZDkxZC5wbmc=" 
+                alt="Т-Банк Супермаркеты" 
+              />
+            </div>
             <p>Корзина пуста</p>
             <p>Добавьте товары из каталога</p>
           </div>

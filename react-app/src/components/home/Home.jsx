@@ -53,15 +53,6 @@ const Home = () => {
             <h1 className="main-title">
               Т-Банк Супермаркеты
             </h1>
-            <p className="subtitle">
-              Все магазины в одном месте
-            </p>
-          </div>
-          <div className="main-image">
-            <img 
-              src="https://imgproxy.cdn-tinkoff.ru/compressed95/aHR0cHM6Ly9jZG4udGJhbmsucnUvc3RhdGljL3BhZ2VzL2ZpbGVzLzNmYzFiYzAzLWM3MTQtNDY4NC05OTg0LTdiMTU3ZmI5ZDkxZC5wbmc=" 
-              alt="Т-Банк Супермаркеты" 
-            />
           </div>
           <h2 className="stores-title">
             Выбери любимый магазин
