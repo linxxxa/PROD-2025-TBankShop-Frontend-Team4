@@ -64,11 +64,6 @@ const Header = ({ showBackButton, onBackClick }) => {
   return (
     <header className='header'>
       <div className="header__container">
-        {showBackButton && (
-          <button className="header__back-button" onClick={onBackClick}>
-            ← Назад
-          </button>
-        )}
         <div className="header__brand">
           <img 
             src="https://cdn.tbank.ru/static/pfa-multimedia/images/33447f85-5b92-42f9-8d88-509bd152b47c.svg" 
@@ -76,6 +71,11 @@ const Header = ({ showBackButton, onBackClick }) => {
             className="header__logo"
           />
         </div>
+        {showBackButton && (
+          <button className="header__back-button" onClick={onBackClick}>
+            ← Назад
+          </button>
+        )}
         
         <div className="header__search">
           <form onSubmit={handleSearchSubmit} className="header__search-form">

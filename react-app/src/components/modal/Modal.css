@@ -5,12 +5,12 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
   align-items: flex-start;
   justify-content: center;
   z-index: 2000;
-  padding: 20px;
+  padding: 40px;
   width: 100vw;
   height: 100vh;
   overflow-y: auto;
@@ -18,15 +18,15 @@
 
 .modal-content {
   background: white;
-  border-radius: 16px;
-  padding: 40px;
-  width: 90vw;
+  border-radius: 20px;
+  padding: 60px;
+  width: 60vw;
   max-width: 600px;
-  min-height: 80vh;
-  margin: 40px 0;
+  min-height: 120vh;
+  margin: 20px 0;
   overflow: visible;
   position: relative;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
   animation: modalSlideIn 0.3s ease-out;
   display: flex;
   flex-direction: column;
@@ -88,9 +88,9 @@
 .modal-title {
   font-family: 'Helvetica Neue', Arial, sans-serif;
   font-weight: 700;
-  font-size: 28px;
+  font-size: 36px;
   color: #333;
-  margin: 0 0 30px 0;
+  margin: 0 0 40px 0;
   text-align: center;
   line-height: 1.2;
 }
@@ -108,16 +108,16 @@
 
 .tab-button {
   flex: 1;
-  padding: 14px 18px;
+  padding: 20px 30px;
   border: none;
   background: transparent;
   cursor: pointer;
   font-family: 'Roboto', sans-serif;
   font-weight: 500;
-  font-size: 15px;
+  font-size: 20px;
   color: #666;
   transition: all 0.2s ease;
-  border-radius: 8px;
+  border-radius: 16px;
 }
 
 .tab-button.active {
@@ -130,13 +130,13 @@
 .auth-form-content {
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: 40px;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
 }
 
 .form-group label {
@@ -148,11 +148,11 @@
 }
 
 .form-group input {
-  padding: 14px 18px;
+  padding: 20px 24px;
   border: 2px solid #e0e0e0;
-  border-radius: 12px;
+  border-radius: 16px;
   font-family: 'Roboto', sans-serif;
-  font-size: 16px;
+  font-size: 20px;
   color: #333;
   transition: all 0.3s ease;
   outline: none;
@@ -174,14 +174,14 @@
   background: rgb(255, 222, 45);
   color: black;
   border: none;
-  border-radius: 12px;
-  padding: 16px 28px;
+  border-radius: 16px;
+  padding: 24px 36px;
   font-family: 'Roboto', sans-serif;
   font-weight: 500;
-  font-size: 16px;
+  font-size: 20px;
   cursor: pointer;
   transition: all 0.3s ease;
-  margin-top: 20px;
+  margin-top: 50px;
   box-shadow: 0 4px 20px rgba(255, 222, 45, 0.3);
 }
 
@@ -199,14 +199,14 @@
 .user-details {
   display: flex;
   flex-direction: column;
-  gap: 24px;
-  margin-bottom: 32px;
+  gap: 32px;
+  margin-bottom: 50px;
 }
 
 .user-field {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
   text-align: left;
 }
 
@@ -232,7 +232,8 @@
 .user-actions {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 24px;
+  margin-top: 40px;
 }
 
 .action-button {
@@ -257,19 +258,19 @@
 /* Адаптивность */
 @media (max-width: 768px) {
   .modal-overlay {
-    padding: 10px;
+    padding: 30px;
   }
   
   .modal-content {
-    width: 95vw;
-    min-height: 85vh;
-    padding: 30px;
-    border-radius: 12px;
-    margin: 20px 0;
+    width: 80vw;
+    min-height: 120vh;
+    padding: 40px 20px;
+    border-radius: 16px;
+    margin: 0;
   }
   
   .modal-title {
-    font-size: 24px;
+    font-size: 28px;
   }
   
   .user-actions {
@@ -284,29 +285,29 @@
 
 @media (max-width: 480px) {
   .modal-overlay {
-    padding: 0;
+    padding: 25px;
   }
   
   .modal-content {
-    width: 100vw;
-    min-height: 100vh;
-    padding: 20px;
-    border-radius: 0;
+    width: 90vw;
+    min-height: 120vh;
+    padding: 30px 15px;
+    border-radius: 12px;
     max-width: none;
     margin: 0;
   }
   
   .modal-title {
-    font-size: 22px;
+    font-size: 24px;
   }
   
   .form-group input {
-    font-size: 14px;
-    padding: 10px 12px;
+    font-size: 16px;
+    padding: 16px 18px;
   }
   
   .submit-button {
-    padding: 12px 20px;
-    font-size: 14px;
+    padding: 18px 24px;
+    font-size: 16px;
   }
 }

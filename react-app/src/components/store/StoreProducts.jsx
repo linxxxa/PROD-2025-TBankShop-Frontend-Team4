@@ -5,6 +5,7 @@ const StoreProducts = ({ storeId, storeName }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [showOtherCategories, setShowOtherCategories] = useState(false);
 
   // Моковые данные продуктов (в реальном проекте будут приходить с бэка)
   const mockProducts = {
@@ -43,11 +44,11 @@ const StoreProducts = ({ storeId, storeName }) => {
   };
 
   const categories = [
-    { id: 'all', name: 'Все товары', icon: '🛒' },
-    { id: 'dairy', name: 'Молочные продукты', icon: '🥛' },
-    { id: 'fruits', name: 'Фрукты', icon: '🍎' },
-    { id: 'bread', name: 'Хлеб', icon: '🍞' },
-    { id: 'meat', name: 'Мясо', icon: '🥩' }
+    { id: 'all', name: 'Все товары' },
+    { id: 'dairy', name: 'Молочные продукты' },
+    { id: 'fruits', name: 'Фрукты' },
+    { id: 'bread', name: 'Хлеб' },
+    { id: 'meat', name: 'Мясо' }
   ];
 
   useEffect(() => {
@@ -58,6 +59,7 @@ const StoreProducts = ({ storeId, storeName }) => {
       setLoading(false);
     }, 1000);
   }, [storeId]);
+
 
   const filteredProducts = selectedCategory === 'all' 
     ? products 
@@ -76,6 +78,25 @@ const StoreProducts = ({ storeId, storeName }) => {
     // Здесь можно добавить модальное окно с деталями товара
   };
 
+  const handleCategoryClick = (categoryId) => {
+    setSelectedCategory(categoryId);
+    // Если выбрана категория из "Других товаров", делаем её первой
+    if (categoryId !== 'all') {
+      // Перемещаем выбранную категорию в начало списка
+      const updatedCategories = [
+        categories.find(cat => cat.id === categoryId),
+        ...categories.filter(cat => cat.id !== categoryId && cat.id !== 'all')
+      ].filter(Boolean);
+      
+      // Обновляем состояние, чтобы перерендерить компонент
+      setSelectedCategory(categoryId);
+    }
+  };
+
+  const handleShowOtherCategories = () => {
+    setShowOtherCategories(!showOtherCategories);
+  };
+
   if (loading) {
     return (
       <div className="store-products">
@@ -89,18 +110,49 @@ const StoreProducts = ({ storeId, storeName }) => {
 
   return (
     <div className="store-products">
+      <h1 className="store-products__title">{storeName}</h1>
 
       <div className="store-products__filters">
-        {categories.map(category => (
+        {/* Показываем выбранную категорию первой */}
+        {selectedCategory === 'all' ? (
           <button
-            key={category.id}
-            className={`filter-button ${selectedCategory === category.id ? 'active' : ''}`}
-            onClick={() => setSelectedCategory(category.id)}
+            className={`filter-button ${selectedCategory === 'all' ? 'active' : ''}`}
+            onClick={() => handleCategoryClick('all')}
           >
-            <span className="filter-icon">{category.icon}</span>
-            <span className="filter-name">{category.name}</span>
+            <span className="filter-name">Все товары</span>
           </button>
-        ))}
+        ) : (
+          <button
+            className={`filter-button ${selectedCategory === selectedCategory ? 'active' : ''}`}
+            onClick={() => handleCategoryClick(selectedCategory)}
+          >
+            <span className="filter-name">{categories.find(cat => cat.id === selectedCategory)?.name}</span>
+          </button>
+        )}
+        
+        {/* Кнопка "Другие товары" */}
+        <button
+          className="filter-button filter-button--others"
+          onClick={handleShowOtherCategories}
+        >
+          <span className="filter-name">Другие товары</span>
+          <span className="filter-arrow">{showOtherCategories ? '▼' : '▶'}</span>
+        </button>
+        
+        {/* Остальные категории (показываются только при развернутом состоянии) */}
+        {showOtherCategories && (
+          <div className="other-categories">
+            {categories.filter(cat => cat.id !== selectedCategory).map(category => (
+              <button
+                key={category.id}
+                className={`filter-button filter-button--other ${selectedCategory === category.id ? 'active' : ''}`}
+                onClick={() => handleCategoryClick(category.id)}
+              >
+                <span className="filter-name">{category.name}</span>
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="store-products__grid">
