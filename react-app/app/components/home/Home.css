@@ -1,0 +1,494 @@
+/* src/components/home/HomePage.css */
+
+.home-page {
+  display: flex;
+  min-height: 100vh;
+  margin-top: 120px;
+  background: rgba(246, 247, 248, 1);
+  padding: 0;
+  position: relative;
+}
+
+/* Боковые панели - закрепленные */
+.home-page__sidebar {
+  background: transparent;
+  position: fixed;
+  top: 120px;
+  bottom: 0;
+  overflow-y: auto;
+  z-index: 10;
+}
+
+.home-page__sidebar--left {
+  left: 0;
+  width: 450px;
+  min-width: 450px;
+  padding: 20px 20px 20px 20px;
+}
+
+.home-page__sidebar--right {
+  right: 0;
+  width: 500px;
+  min-width: 500px;
+  padding: 20px;
+}
+
+.sidebar-placeholder {
+  height: 100%;
+  background: transparent;
+}
+
+.sidebar-image {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.sidebar-image img {
+  width: 100%;
+  height: auto;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 16px;
+}
+
+/* Основной контент - прокручиваемый и центрированный */
+.home-page__main {
+  flex: 1;
+  max-width: 900px;
+  padding: 30px 30px 60px 30px;
+  min-height: calc(100vh - 120px);
+  overflow-y: auto;
+  margin: 0 500px 0 450px; /* Отступы для боковых панелей */
+  position: relative;
+}
+
+.home-page__main::-webkit-scrollbar {
+  width: 6px;
+}
+
+.home-page__main::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.home-page__main::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.home-page__main::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Серый прямоугольник сверху на весь экран */
+.home-page__main::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 120px;
+  background: rgba(246, 247, 248, 1);
+  z-index: 200;
+  pointer-events: none;
+}
+
+/* Фиксированный заголовок при прокрутке */
+.main-content {
+  max-width: 800px;
+  margin: 0 auto; /* Центрируем контент внутри main */
+  position: relative;
+}
+
+.main-header {
+  position: relative;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  z-index: 100;
+}
+
+/* Увеличенный заголовок с оранжевым фоном */
+.main-title {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 700;
+  font-size: 42px;
+  color: #333;
+  text-align: center;
+  margin-bottom: 30px;
+  line-height: 1.2;
+}
+
+/* Новая надпись */
+.subtitle {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 400;
+  font-size: 20px;
+  color: #666;
+  text-align: center;
+  margin-bottom: 30px;
+  line-height: 1.4;
+}
+
+.stores-title {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 600;
+  font-size: 32px;
+  color: #333;
+  text-align: center;
+  margin: 0 0 40px 0;
+  line-height: 1.2;
+}
+
+/* Увеличенная основная картинка */
+.main-image {
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 60px;
+}
+
+.main-image img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  display: block;
+  border-radius: 16px;
+}
+
+/* Сетка магазинов - по 2 в ряд */
+.stores-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32px;
+  margin-top: 0;
+  align-items: stretch;
+}
+
+/* Карточка магазина - нормальный размер */
+.store-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.store-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+/* Контейнер для изображения - теперь кнопка */
+.store-card__image-container {
+  width: 100%;
+  height: 160px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 0;
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.store-card__image-container:focus,
+.store-card__image-container:active {
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.store-card__image-container:hover {
+  transform: scale(1.02);
+  opacity: 0.9;
+}
+
+.store-card__image-container:active {
+  transform: scale(0.98);
+}
+
+.store-card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Контент карточки - нормальный размер */
+.store-card__content {
+  padding: 20px 24px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.store-card__name {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 600;
+  font-size: 26px;
+  color: #333;
+  margin: 0 0 16px 0;
+  line-height: 1.3;
+}
+
+.store-card__description {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  color: #666;
+  margin: 0 0 20px 0;
+  line-height: 1.4;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Стили для кнопки-иконки (уже определены выше в .store-card__image-container) */
+
+/* Адаптивность */
+@media (max-width: 1500px) {
+  .home-page__sidebar--left {
+    width: 400px;
+    min-width: 400px;
+  }
+  
+  .home-page__sidebar--right {
+    width: 450px;
+    min-width: 450px;
+  }
+  
+  .home-page__main {
+    margin: 0 450px 0 400px;
+    max-width: 650px;
+  }
+  
+}
+
+@media (max-width: 1400px) {
+  .home-page__sidebar--left {
+    width: 350px;
+    min-width: 350px;
+  }
+  
+  .home-page__sidebar--right {
+    width: 400px;
+    min-width: 400px;
+  }
+  
+  .home-page__main {
+    margin: 0 400px 0 350px;
+    max-width: 600px;
+  }
+  
+}
+
+@media (max-width: 1200px) {
+  .home-page__sidebar--left {
+    width: 300px;
+    min-width: 300px;
+  }
+  
+  .home-page__sidebar--right {
+    width: 350px;
+    min-width: 350px;
+  }
+  
+  .home-page__main {
+    margin: 0 350px 0 300px;
+    max-width: 550px;
+  }
+  
+}
+
+@media (max-width: 1024px) {
+  .home-page__sidebar--left {
+    width: 250px;
+    min-width: 250px;
+  }
+  
+  .home-page__sidebar--right {
+    width: 300px;
+    min-width: 300px;
+  }
+  
+  .home-page__main {
+    margin: 0 300px 0 250px;
+    max-width: 500px;
+  }
+  
+  
+  .main-content {
+    max-width: 400px;
+  }
+}
+
+/* Стили для состояний загрузки и ошибок */
+.loading-message,
+.error-message {
+  text-align: center;
+  padding: 20px;
+  margin: 20px 0;
+  border-radius: 8px;
+}
+
+.loading-message {
+  background-color: #f0f8ff;
+  color: #0066cc;
+  border: 1px solid #b3d9ff;
+}
+
+.error-message {
+  background-color: #fff5f5;
+  color: #cc0000;
+  border: 1px solid #ffb3b3;
+}
+
+.error-message p {
+  margin: 5px 0;
+}
+
+@media (max-width: 768px) {
+  .home-page {
+    flex-direction: column;
+    margin-top: 120px;
+    padding: 0;
+    background: white;
+  }
+  
+  .home-page__sidebar {
+    position: static;
+    width: 100%;
+    min-width: auto;
+    padding: 0;
+    display: block;
+    height: auto;
+    overflow: visible;
+  }
+  
+  .home-page__sidebar--left {
+    background: white;
+    border-radius: 0 0 16px 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    padding: 0;
+  }
+  
+  .home-page__sidebar--right {
+    display: none;
+  }
+  
+  .home-page__main {
+    margin: 0;
+    padding: 0 20px;
+    min-height: auto;
+    overflow-y: visible;
+    width: 100%;
+    max-width: 100%;
+    background: white;
+  }
+  
+  .home-page__main::before {
+    display: none;
+  }
+  
+  .main-content {
+    max-width: 100%;
+    width: 100%;
+  }
+  
+  .main-title {
+    font-size: 32px;
+  }
+  
+  .subtitle {
+    font-size: 18px;
+  }
+  
+  .stores-title {
+    font-size: 28px;
+    margin: 0 0 20px 0;
+  }
+  
+  .stores-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    width: 100%;
+  }
+  
+  .main-image img {
+    height: 200px;
+  }
+  
+  .store-card {
+    width: 100%;
+    margin: 0;
+  }
+  
+  .store-card__image-container {
+    height: 140px;
+  }
+  
+  .store-card__content {
+    padding: 16px;
+  }
+  
+  .store-card__name {
+    font-size: 18px;
+  }
+  
+  .store-card__description {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .stores-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .store-card__content {
+    padding: 16px 18px 18px 18px;
+  }
+  
+  .main-title {
+    font-size: 28px;
+  }
+  
+  .subtitle {
+    font-size: 16px;
+  }
+  
+  .stores-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .store-card__name {
+    font-size: 17px;
+  }
+  
+  .store-card__description {
+    font-size: 13px;
+  }
+  
+  /* Стили кнопок убраны - теперь иконки кликабельные */
+}
+
+
+/* Подключение шрифтов */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');

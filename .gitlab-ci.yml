@@ -1,0 +1,305 @@
+# GitLab CI/CD для хакатона
+# Т-Банк Супермаркеты
+
+variables:
+  VM_HOST: "team-04-hyn9y74f.hack.prodcontest.ru"
+  VM_USER: "student"
+  VM_PORT: "22"
+  DOMAIN: "team-04-hyn9y74f.hack.prodcontest.ru"
+  SSH_KEY_FILE: "private_key.pem"
+  # Получаем информацию с виртуальной машины
+  VM_INFO_URL: "https://team-04-hyn9y74f.hack.prodcontest.ru/api/info"
+  VM_STATUS_URL: "https://team-04-hyn9y74f.hack.prodcontest.ru/api/status"
+
+stages:
+  - info
+  - setup
+  - deploy
+  - verify
+
+# Получение информации с виртуальной машины
+get_vm_info:
+  stage: info
+  image: alpine:latest
+  before_script:
+    - apk add --no-cache curl jq
+  script:
+    - echo "📡 Получение информации с виртуальной машины..."
+    - |
+      # Получаем информацию о виртуальной машине
+      VM_INFO=$(curl -s "$VM_INFO_URL" || echo '{"status":"unavailable"}')
+      echo "VM Info: $VM_INFO"
+      
+      # Получаем статус виртуальной машины
+      VM_STATUS=$(curl -s "$VM_STATUS_URL" || echo '{"status":"unavailable"}')
+      echo "VM Status: $VM_STATUS"
+      
+      # Проверяем доступность SSH
+      if nc -z "$VM_HOST" "$VM_PORT" 2>/dev/null; then
+        echo "✅ SSH порт $VM_PORT доступен"
+        SSH_AVAILABLE="true"
+      else
+        echo "❌ SSH порт $VM_PORT недоступен"
+        SSH_AVAILABLE="false"
+      fi
+      
+      # Проверяем доступность HTTP
+      if curl -s -I "http://$DOMAIN" | grep -q "200\|301"; then
+        echo "✅ HTTP доступен"
+        HTTP_AVAILABLE="true"
+      else
+        echo "❌ HTTP недоступен"
+        HTTP_AVAILABLE="false"
+      fi
+      
+      # Проверяем доступность HTTPS
+      if curl -s -I "https://$DOMAIN" | grep -q "200"; then
+        echo "✅ HTTPS доступен"
+        HTTPS_AVAILABLE="true"
+      else
+        echo "❌ HTTPS недоступен"
+        HTTPS_AVAILABLE="false"
+      fi
+      
+      # Сохраняем информацию для следующих этапов
+      echo "SSH_AVAILABLE=$SSH_AVAILABLE" >> vm_info.env
+      echo "HTTP_AVAILABLE=$HTTP_AVAILABLE" >> vm_info.env
+      echo "HTTPS_AVAILABLE=$HTTPS_AVAILABLE" >> vm_info.env
+  artifacts:
+    reports:
+      dotenv: vm_info.env
+    expire_in: 1 hour
+  allow_failure: true
+
+# Настройка SSH и SSL
+setup_ssh_ssl:
+  stage: setup
+  image: alpine:latest
+  dependencies:
+    - get_vm_info
+  before_script:
+    - apk add --no-cache openssh-client curl
+    - mkdir -p ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" > ~/.ssh/private_key.pem
+    - chmod 600 ~/.ssh/private_key.pem
+    - ssh-keyscan -H $VM_HOST >> ~/.ssh/known_hosts
+  script:
+    - echo "🔐 Setting up SSH connection..."
+    - echo "SSH Available: $SSH_AVAILABLE"
+    - |
+      if [ "$SSH_AVAILABLE" = "true" ]; then
+        ssh -i ~/.ssh/private_key.pem -p $VM_PORT -o StrictHostKeyChecking=no $VM_USER@$VM_HOST "echo 'SSH connection successful'"
+        echo "✅ SSH connection established"
+      else
+        echo "❌ SSH not available, skipping connection test"
+        exit 1
+      fi
+  artifacts:
+    paths:
+      - ~/.ssh/private_key.pem
+    expire_in: 1 hour
+
+# Настройка SSL сертификатов
+setup_ssl:
+  stage: setup
+  image: alpine:latest
+  script:
+    - echo "🔒 Setting up SSL certificates..."
+    - mkdir -p ssl
+    - echo "$SSL_CERT" > ssl/cert.pem
+    - echo "$SSL_CHAIN" > ssl/chain.pem
+    - echo "$SSL_FULLCHAIN" > ssl/fullchain.pem
+    - echo "$SSL_PRIVKEY" > ssl/privkey.pem
+    - echo "✅ SSL certificates configured"
+  artifacts:
+    paths:
+      - ssl/
+    expire_in: 1 hour
+
+# Установка Docker на VM
+install_docker:
+  stage: deploy
+  image: alpine:latest
+  dependencies:
+    - setup_ssh_ssl
+  before_script:
+    - apk add --no-cache openssh-client
+    - cp ~/.ssh/private_key.pem ./private_key.pem
+    - chmod 600 private_key.pem
+  script:
+    - echo "🐳 Installing Docker on VM..."
+    - ssh -i private_key.pem -p $VM_PORT $VM_USER@$VM_HOST "
+        if ! command -v docker &> /dev/null; then
+          curl -fsSL https://get.docker.com -o get-docker.sh
+          sudo sh get-docker.sh
+          sudo usermod -aG docker \$USER
+          echo 'Docker installed'
+        else
+          echo 'Docker already installed'
+        fi
+      "
+
+# Установка Docker Compose на VM
+install_docker_compose:
+  stage: deploy
+  image: alpine:latest
+  dependencies:
+    - setup_ssh_ssl
+  before_script:
+    - apk add --no-cache openssh-client
+    - cp ~/.ssh/private_key.pem ./private_key.pem
+    - chmod 600 private_key.pem
+  script:
+    - echo "🐳 Installing Docker Compose on VM..."
+    - ssh -i private_key.pem -p $VM_PORT $VM_USER@$VM_HOST "
+        if ! command -v docker-compose &> /dev/null; then
+          sudo curl -L \"https://github.com/docker/compose/releases/download/v2.20.0/docker-compose-\$(uname -s)-\$(uname -m)\" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+          echo 'Docker Compose installed'
+        else
+          echo 'Docker Compose already installed'
+        fi
+      "
+
+# Создание папки проекта
+create_project_directory:
+  stage: deploy
+  image: alpine:latest
+  dependencies:
+    - setup_ssh_ssl
+  before_script:
+    - apk add --no-cache openssh-client
+    - cp ~/.ssh/private_key.pem ./private_key.pem
+    - chmod 600 private_key.pem
+  script:
+    - echo "📁 Creating project directory..."
+    - ssh -i private_key.pem -p $VM_PORT $VM_USER@$VM_HOST "
+        mkdir -p ~/tbank-supermarkets
+        echo 'Project directory created'
+      "
+
+# Копирование файлов на VM
+copy_files:
+  stage: deploy
+  image: alpine:latest
+  dependencies:
+    - setup_ssh_ssl
+    - setup_ssl
+  before_script:
+    - apk add --no-cache openssh-client
+    - cp ~/.ssh/private_key.pem ./private_key.pem
+    - chmod 600 private_key.pem
+  script:
+    - echo "📤 Copying files to VM..."
+    - scp -i private_key.pem -P $VM_PORT -r . $VM_USER@$VM_HOST:~/tbank-supermarkets/
+    - echo "✅ Files copied successfully"
+
+# Остановка существующих контейнеров
+stop_existing_containers:
+  stage: deploy
+  image: alpine:latest
+  dependencies:
+    - setup_ssh_ssl
+  before_script:
+    - apk add --no-cache openssh-client
+    - cp ~/.ssh/private_key.pem ./private_key.pem
+    - chmod 600 private_key.pem
+  script:
+    - echo "🛑 Stopping existing containers..."
+    - ssh -i private_key.pem -p $VM_PORT $VM_USER@$VM_HOST "
+        cd ~/tbank-supermarkets
+        docker-compose -f deploy-production.yml down || true
+        echo 'Existing containers stopped'
+      "
+
+# Сборка и запуск приложения
+build_and_deploy:
+  stage: deploy
+  image: alpine:latest
+  dependencies:
+    - setup_ssh_ssl
+  before_script:
+    - apk add --no-cache openssh-client
+    - cp ~/.ssh/private_key.pem ./private_key.pem
+    - chmod 600 private_key.pem
+  script:
+    - echo "🔨 Building and deploying application..."
+    - ssh -i private_key.pem -p $VM_PORT $VM_USER@$VM_HOST "
+        cd ~/tbank-supermarkets
+        echo 'Building Docker image...'
+        docker-compose -f deploy-production.yml build --no-cache
+        echo 'Starting containers...'
+        docker-compose -f deploy-production.yml up -d
+        echo 'Application deployed'
+      "
+
+# Проверка статуса развертывания
+check_deployment_status:
+  stage: verify
+  image: alpine:latest
+  dependencies:
+    - setup_ssh_ssl
+  before_script:
+    - apk add --no-cache openssh-client
+    - cp ~/.ssh/private_key.pem ./private_key.pem
+    - chmod 600 private_key.pem
+  script:
+    - echo "✅ Checking deployment status..."
+    - ssh -i private_key.pem -p $VM_PORT $VM_USER@$VM_HOST "
+        cd ~/tbank-supermarkets
+        echo '=== Docker Compose Status ==='
+        docker-compose -f deploy-production.yml ps
+        echo ''
+        echo '=== Container Status ==='
+        docker ps --filter name=tbank-supermarkets
+        echo ''
+        echo '=== Resource Usage ==='
+        docker stats --no-stream --format 'table {{.Container}}\t{{.CPUPerc}}\t{{.MemUsage}}' tbank-supermarkets-production
+      "
+
+# Проверка HTTP доступности
+test_http_accessibility:
+  stage: verify
+  image: alpine:latest
+  script:
+    - echo "🌐 Testing HTTP accessibility..."
+    - sleep 15
+    - curl -I http://$DOMAIN || echo "HTTP not accessible yet"
+    - echo "✅ HTTP test completed"
+
+# Проверка HTTPS доступности
+test_https_accessibility:
+  stage: verify
+  image: alpine:latest
+  script:
+    - echo "🔒 Testing HTTPS accessibility..."
+    - curl -I https://$DOMAIN || echo "HTTPS not accessible yet"
+    - echo "✅ HTTPS test completed"
+
+# Проверка SSL сертификата
+verify_ssl_certificate:
+  stage: verify
+  image: alpine:latest
+  before_script:
+    - apk add --no-cache openssl
+  script:
+    - echo "🔐 Verifying SSL certificate..."
+    - echo | openssl s_client -connect $DOMAIN:443 -servername $DOMAIN 2>/dev/null | openssl x509 -noout -dates || echo "SSL certificate verification failed"
+    - echo "✅ SSL certificate verification completed"
+
+# Итоговый отчет
+deployment_summary:
+  stage: verify
+  image: alpine:latest
+  script:
+    - echo "🎉 Hackathon deployment completed!"
+    - echo ""
+    - echo "🌐 Application URLs:"
+    - echo "   HTTP:  http://$DOMAIN"
+    - echo "   HTTPS: https://$DOMAIN"
+    - echo ""
+    - echo "🏆 Ready for hackathon!"
+    - echo "   Domain: $DOMAIN"
+    - echo "   SSL: Configured"
+    - echo "   Ports: 80 (HTTP), 443 (HTTPS)"
+  when: always

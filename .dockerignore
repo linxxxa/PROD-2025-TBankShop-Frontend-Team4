@@ -1,0 +1,41 @@
+# Игнорируем node_modules
+node_modules
+*/node_modules
+
+# Игнорируем файлы сборки
+dist
+build
+
+# Игнорируем git
+.git
+.gitignore
+
+# Игнорируем README и документацию
+README.md
+*.md
+
+# Игнорируем IDE файлы
+.vscode
+.idea
+*.swp
+*.swo
+
+# Игнорируем логи
+*.log
+logs
+
+# Игнорируем временные файлы
+.tmp
+.temp
+
+# Игнорируем OS файлы
+.DS_Store
+Thumbs.db
+
+# Игнорируем тестовые файлы
+__tests__
+*.test.js
+*.spec.js
+
+# Игнорируем другие проекты в корне
+my-app
