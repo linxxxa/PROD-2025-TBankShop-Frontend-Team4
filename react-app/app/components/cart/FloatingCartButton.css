@@ -51,10 +51,17 @@
   text-align: center;
 }
 
+/* Скрываем по умолчанию */
+.floating-cart-button {
+  display: none;
+}
+
 /* Показываем только на мобильных устройствах */
 @media (max-width: 768px) {
   .floating-cart-button {
     display: flex;
+    bottom: 20px;
+    right: 20px;
   }
 }
 

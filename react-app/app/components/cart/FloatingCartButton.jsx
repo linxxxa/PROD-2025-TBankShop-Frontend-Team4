@@ -16,6 +16,7 @@ const FloatingCartButton = ({ onCartToggle }) => {
         const total = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
         setTotalPrice(total);
         
+        // Показываем кнопку только если есть товары в корзине
         setIsVisible(cartItems.length > 0);
       } else {
         setCartItems([]);
