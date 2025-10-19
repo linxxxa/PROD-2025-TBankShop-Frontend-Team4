@@ -3,6 +3,11 @@ import { pluginReact } from '@rsbuild/plugin-react';
 
 export default defineConfig({
   plugins: [pluginReact()],
+  source: {
+    entry: {
+      index: './app/index.jsx'
+    }
+  },
   server: {
     proxy: {
       '/api': {
